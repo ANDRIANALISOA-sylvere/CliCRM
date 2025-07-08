@@ -1,24 +1,31 @@
-import { AppSidebar } from "@/components/app-sidebar";
-import { DataTable } from "@/components/data-table";
-import { SiteHeader } from "@/components/site-header";
-import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+"use client";
+import { AddClientDialog } from "@/components/AddClientDialog";
+import { ClientsTable } from "@/components/ClientsTable";
+import { Sidebar } from "@/components/Sidebar";
+import { mockClients } from "@/lib/clients";
+import { useEffect, useState } from "react";
 
-import data from "./data.json";
+export default function Clients() {
+  const [clients, setClients] = useState([]);
 
-export default function Page() {
+  useEffect(() => {
+    setClients(mockClients);
+  }, []);
+
+  const addNewClient = (newClient) => {
+    setClients(prevClients => [...prevClients, newClient]);
+  };
   return (
-    <SidebarProvider>
-      <AppSidebar variant="inset" />
-      <SidebarInset>
-        <SiteHeader />
-        <div className="flex flex-1 flex-col">
-          <div className="@container/main flex flex-1 flex-col gap-2">
-            <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-              <DataTable data={data} />
-            </div>
-          </div>
+    <Sidebar>
+      <div className="p-8">
+        <h2 className="text-2xl font-bold text-orange-300">
+          Gestion des clients
+        </h2>
+        <div className="mt-5">
+          <AddClientDialog addNewClient={addNewClient}></AddClientDialog>
+          <ClientsTable clients={clients}></ClientsTable>
         </div>
-      </SidebarInset>
-    </SidebarProvider>
+      </div>
+    </Sidebar>
   );
 }
